@@ -4,8 +4,7 @@ import { AI_SYSTEM_PROMPT } from '../utils/constants'
 const API_BASE = 'https://dashscope.aliyuncs.com/compatible-mode/v1'
 
 function getApiKey(storedKey: string): string {
-  const envKey = import.meta.env.VITE_QWEN_API_KEY as string | undefined
-  return envKey || storedKey
+  return storedKey
 }
 
 function buildContextPrompt(todaySummary: string): string {

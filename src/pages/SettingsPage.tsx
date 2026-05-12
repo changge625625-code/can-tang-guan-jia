@@ -7,8 +7,6 @@ interface Props {
   onNavigate: (page: string) => void
 }
 
-const hasEnvKey = !!import.meta.env.VITE_QWEN_API_KEY
-
 export default function SettingsPage({ onNavigate }: Props) {
   const [apiKey, setApiKey] = useState('')
   const [highBg, setHighBg] = useState('13.9')
@@ -70,24 +68,16 @@ export default function SettingsPage({ onNavigate }: Props) {
         {/* API Key */}
         <div className="bg-white rounded-card p-5 shadow-card">
           <h2 className="text-[22px] font-semibold text-primary mb-3">🔑 AI 服务</h2>
-          {hasEnvKey ? (
-            <div className="flex items-center gap-3 h-14 px-4 rounded-[12px] bg-green-bg text-[22px] text-green font-medium">
-              ✅ API Key 已配置（环境变量）
-            </div>
-          ) : (
-            <>
-              <input
-                type="password"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="sk-..."
-                className={inputClass}
-              />
-              <p className="text-[18px] text-tertiary mt-2">
-                去 bailian.console.aliyun.com 获取
-              </p>
-            </>
-          )}
+          <input
+            type="password"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+            placeholder="sk-..."
+            className={inputClass}
+          />
+          <p className="text-[18px] text-tertiary mt-2">
+            去 bailian.console.aliyun.com 获取
+          </p>
         </div>
 
         {/* 血糖阈值 */}
