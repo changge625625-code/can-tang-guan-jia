@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/can-tang-guan-jia/sw.js', { scope: '/can-tang-guan-jia/' })})}
