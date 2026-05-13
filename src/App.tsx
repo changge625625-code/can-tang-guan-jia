@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import { useFontMode } from './hooks/useFontMode'
 import BottomNav from './components/BottomNav'
 import HomePage from './pages/HomePage'
 import RecordPage from './pages/RecordPage'
@@ -18,6 +19,7 @@ type Route =
 
 function App() {
   const [route, setRoute] = useState<Route>({ page: 'home' })
+  const [fontMode, setFontMode] = useFontMode()
 
   const currentTab: TabKey | null =
     route.page === 'home' ? 'home'
@@ -45,7 +47,7 @@ function App() {
       {route.page === 'history' && <HistoryPage onNavigate={handleNavigate} />}
       {route.page === 'meal' && <MealPage onNavigate={handleNavigate} />}
       {route.page === 'meal-detail' && <MealDetailPage params={route.params} onNavigate={handleNavigate} />}
-      {route.page === 'settings' && <SettingsPage onNavigate={handleNavigate} />}
+      {route.page === 'settings' && <SettingsPage onNavigate={handleNavigate} fontMode={fontMode} setFontMode={setFontMode} />}
 
       <BottomNav active={currentTab} onNavigate={handleTab} />
     </div>

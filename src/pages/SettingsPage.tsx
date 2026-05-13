@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react'
 import { getSettings, updateSettings } from '../services/settingsService'
 import { db } from '../db'
+import Icon from '../components/Icon'
+import type { FontMode } from '../types'
 
 
 interface Props {
   onNavigate: (page: string) => void
+  fontMode: FontMode
+  setFontMode: (mode: FontMode) => Promise<void>
 }
 
-export default function SettingsPage({ onNavigate }: Props) {
+export default function SettingsPage({ onNavigate, fontMode, setFontMode }: Props) {
   const [apiKey, setApiKey] = useState('')
   const [highBg, setHighBg] = useState('13.9')
   const [lowBg, setLowBg] = useState('3.9')
@@ -48,78 +52,124 @@ export default function SettingsPage({ onNavigate }: Props) {
     URL.revokeObjectURL(url)
   }
 
-  const inputClass = "w-full h-14 px-4 text-[22px] rounded-[12px] border border-[#EBEBE6] bg-cream text-primary text-center focus:border-coral transition-colors"
+  const inputClass = "w-full h-14 px-4 rounded-[12px] border border-[#E8E5DF] bg-white text-primary text-center focus:border-mint transition-colors"
+  const inputStyle = { fontSize: 'var(--fs-heading)' } as React.CSSProperties
 
   return (
     <div className="page-fade-in px-5 pb-32 pt-6">
-      {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-[40px] font-bold text-primary tracking-tight">设置</h1>
+        <h1 style={{ fontSize: 'var(--fs-display)', fontWeight: 700, color: 'var(--text)' }}>设置</h1>
         <button
           onClick={() => onNavigate('home')}
-          className="h-11 px-4 rounded-full text-[20px] font-medium text-coral bg-coral-soft active:scale-95 transition-transform"
+          className="h-11 px-4 rounded-full font-medium transition-transform active:scale-95 flex items-center gap-1"
+          style={{ fontSize: 'var(--fs-label)', color: 'var(--mint)', background: 'var(--mint-soft)' }}
         >
-          🏠 首页
+          <Icon name="home" size={18} color="var(--mint)" />
+          <span>首页</span>
         </button>
       </div>
 
       <div className="stagger flex flex-col gap-5">
 
+        {/* 字体大小 */}
+        <div className="bg-white rounded-card p-5 shadow-card">
+          <h2 style={{ fontSize: 'var(--fs-heading)', fontWeight: 600, color: 'var(--text)', marginBottom: 12 }}>字体大小</h2>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setFontMode('normal')}
+              className="flex-1 h-14 rounded-btn font-medium transition-all active:scale-95"
+              style={{
+                fontSize: 'var(--fs-body-lg)',
+                background: fontMode === 'normal' ? 'var(--mint-soft)' : 'var(--white)',
+                color: fontMode === 'normal' ? 'var(--mint)' : 'var(--text-secondary)',
+                border: fontMode === 'normal' ? '1.5px solid var(--mint)' : '1px solid var(--border)',
+              }}
+            >
+              标准
+            </button>
+            <button
+              onClick={() => setFontMode('large')}
+              className="flex-1 h-14 rounded-btn font-medium transition-all active:scale-95"
+              style={{
+                fontSize: 'var(--fs-body-lg)',
+                background: fontMode === 'large' ? 'var(--mint-soft)' : 'var(--white)',
+                color: fontMode === 'large' ? 'var(--mint)' : 'var(--text-secondary)',
+                border: fontMode === 'large' ? '1.5px solid var(--mint)' : '1px solid var(--border)',
+              }}
+            >
+              大字
+            </button>
+          </div>
+        </div>
+
         {/* API Key */}
         <div className="bg-white rounded-card p-5 shadow-card">
-          <h2 className="text-[22px] font-semibold text-primary mb-3">🔑 AI 服务</h2>
+          <div className="flex items-center gap-1.5 mb-3">
+            <Icon name="key" size={20} color="var(--text)" />
+            <span style={{ fontSize: 'var(--fs-heading)', fontWeight: 600, color: 'var(--text)' }}>AI 服务</span>
+          </div>
           <input
             type="password"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
             placeholder="sk-..."
             className={inputClass}
+            style={inputStyle}
           />
-          <p className="text-[18px] text-tertiary mt-2">
+          <p style={{ fontSize: 'var(--fs-small)', color: 'var(--text-tertiary)', marginTop: 8 }}>
             去 bailian.console.aliyun.com 获取
           </p>
         </div>
 
         {/* 血糖阈值 */}
         <div className="bg-white rounded-card p-5 shadow-card">
-          <h2 className="text-[22px] font-semibold text-primary mb-4">🩸 血糖阈值 (mmol/L)</h2>
+          <div className="flex items-center gap-1.5 mb-4">
+            <Icon name="blood" size={20} color="var(--text)" />
+            <span style={{ fontSize: 'var(--fs-heading)', fontWeight: 600, color: 'var(--text)' }}>血糖阈值 (mmol/L)</span>
+          </div>
           <div className="flex gap-3">
             <div className="flex-1">
-              <label className="text-[18px] text-secondary block mb-1">高血糖警告</label>
-              <input type="number" value={highBg} onChange={(e) => setHighBg(e.target.value)} className={inputClass} />
+              <label style={{ fontSize: 'var(--fs-small)', color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>高血糖警告</label>
+              <input type="number" value={highBg} onChange={(e) => setHighBg(e.target.value)} className={inputClass} style={inputStyle} />
             </div>
             <div className="flex-1">
-              <label className="text-[18px] text-secondary block mb-1">低血糖警告</label>
-              <input type="number" value={lowBg} onChange={(e) => setLowBg(e.target.value)} className={inputClass} />
+              <label style={{ fontSize: 'var(--fs-small)', color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>低血糖警告</label>
+              <input type="number" value={lowBg} onChange={(e) => setLowBg(e.target.value)} className={inputClass} style={inputStyle} />
             </div>
           </div>
         </div>
 
         {/* 饮食告警 */}
         <div className="bg-white rounded-card p-5 shadow-card">
-          <h2 className="text-[22px] font-semibold text-primary mb-4">🍽️ 饮食提醒</h2>
-          <label className="text-[18px] text-secondary block mb-1">评分 ≤ 此值时弹出提醒</label>
-          <input type="number" min="1" max="10" value={alertScore} onChange={(e) => setAlertScore(e.target.value)} className={`${inputClass} w-24`} />
+          <div className="flex items-center gap-1.5 mb-4">
+            <Icon name="alert" size={20} color="var(--text)" />
+            <span style={{ fontSize: 'var(--fs-heading)', fontWeight: 600, color: 'var(--text)' }}>饮食提醒</span>
+          </div>
+          <label style={{ fontSize: 'var(--fs-small)', color: 'var(--text-secondary)', display: 'block', marginBottom: 4 }}>评分 ≤ 此值时弹出提醒</label>
+          <input type="number" min="1" max="10" value={alertScore} onChange={(e) => setAlertScore(e.target.value)} className={`${inputClass} w-24`} style={inputStyle} />
         </div>
 
         {/* 保存 */}
         <button
           onClick={handleSave}
-          className="w-full h-[64px] rounded-btn font-semibold text-[23px] active:scale-[0.97] transition-all" style={{ background: 'var(--coral)', color: 'var(--text)', boxShadow: 'var(--shadow-md)' }}
+          className="w-full h-[64px] rounded-btn font-semibold active:scale-[0.97] transition-all flex items-center justify-center"
+          style={{ fontSize: 'var(--fs-body-lg)', background: 'var(--mint)', color: '#FFFFFF' }}
         >
-          {saved ? '✅ 已保存' : '保存设置'}
+          <Icon name="save" size={22} color="#FFFFFF" />
+          <span className="ml-2">{saved ? '已保存' : '保存设置'}</span>
         </button>
 
         {/* 导出 */}
         <button
           onClick={handleExport}
-          className="w-full h-[64px] rounded-btn bg-white border border-[#EBEBE6] text-secondary font-medium text-[22px] active:bg-cream transition-colors"
+          className="w-full h-[64px] rounded-btn bg-white border border-[#E8E5DF] font-medium active:bg-gray-50 transition-colors flex items-center justify-center"
+          style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)' }}
         >
-          📦 导出数据
+          <Icon name="download" size={20} color="var(--text-secondary)" />
+          <span className="ml-2">导出数据</span>
         </button>
 
-        {/* 关于 */}
-        <p className="text-center text-[19px] text-tertiary">🍀 灿灿糖管家 v1.0 · 温馨陪伴</p>
+        <p className="text-center" style={{ fontSize: 'var(--fs-label)', color: 'var(--text-tertiary)' }}>灿灿糖管家 v1.0 · 温馨陪伴</p>
       </div>
     </div>
   )

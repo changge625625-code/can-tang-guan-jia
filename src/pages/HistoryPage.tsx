@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Refe
 import { getAllGlucose } from '../services/glucoseService'
 import { getAllMeals } from '../services/mealService'
 import { GLUCOSE_TYPE_LABELS, MEAL_TYPE_LABELS, getScoreStyle } from '../utils/constants'
+import Icon from '../components/Icon'
 import type { GlucoseRecord, MealRecord } from '../types'
 
 interface Props { onNavigate: (page: string, params?: any) => void }
@@ -20,32 +21,35 @@ export default function HistoryPage({ onNavigate }: Props) {
     value: r.value,
   }))
 
-  const tabBtn = (t: Tab, label: string, count: number) => (
+  const tabBtn = (t: Tab, icon: 'blood' | 'meal', label: string, count: number) => (
     <button
       onClick={() => setTab(t)}
-      className="flex-1 h-13 rounded-full text-[20px] font-medium transition-all active:scale-95"
+      className="flex-1 h-13 rounded-full font-medium transition-all active:scale-95 flex items-center justify-center gap-1.5"
       style={{
-        background: tab === t ? 'var(--coral-soft)' : 'var(--white)',
-        color: tab === t ? 'var(--coral)' : 'var(--text-secondary)',
-        border: tab === t ? '1.5px solid var(--coral)' : '1px solid var(--border)',
+        fontSize: 'var(--fs-label)',
+        background: tab === t ? 'var(--mint-soft)' : 'var(--white)',
+        color: tab === t ? 'var(--mint)' : 'var(--text-secondary)',
+        border: tab === t ? '1.5px solid var(--mint)' : '1px solid var(--border)',
       }}
     >
-      {label} ({count})
+      <Icon name={icon} size={18} color={tab === t ? 'var(--mint)' : 'var(--text-secondary)'} />
+      <span>{label} ({count})</span>
     </button>
   )
 
   return (
     <div className="page-fade-in px-5 pb-32 pt-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-[40px] font-bold text-primary tracking-tight">历史</h1>
-        <button onClick={() => onNavigate('home')} className="h-11 px-4 rounded-full text-[20px] font-medium text-coral bg-coral-soft active:scale-95 transition-transform">
-          🏠 首页
+        <h1 style={{ fontSize: 'var(--fs-display)', fontWeight: 700, color: 'var(--text)' }}>历史</h1>
+        <button onClick={() => onNavigate('home')} className="h-11 px-4 rounded-full font-medium transition-transform active:scale-95 flex items-center gap-1" style={{ fontSize: 'var(--fs-label)', color: 'var(--mint)', background: 'var(--mint-soft)' }}>
+          <Icon name="home" size={18} color="var(--mint)" />
+          <span>首页</span>
         </button>
       </div>
 
       <div className="flex gap-3 mb-5">
-        {tabBtn('glucose', '🩸 血糖', glucoseList.length)}
-        {tabBtn('meal', '🍽️ 饮食', mealList.length)}
+        {tabBtn('glucose', 'blood', '血糖', glucoseList.length)}
+        {tabBtn('meal', 'meal', '饮食', mealList.length)}
       </div>
 
       {tab === 'glucose' && (
@@ -54,25 +58,25 @@ export default function HistoryPage({ onNavigate }: Props) {
             <div className="bg-white rounded-card p-4 mb-5 shadow-card">
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#EBEBE6" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E8E5DF" />
                   <XAxis dataKey="time" tick={{ fontSize: 11, fill: '#B8B8B4' }} />
                   <YAxis tick={{ fontSize: 11, fill: '#B8B8B4' }} domain={[0, 'auto']} />
-                  <ReferenceLine y={13.9} stroke="#FF6B6B" strokeDasharray="4 4" strokeWidth={1} />
-                  <ReferenceLine y={3.9} stroke="#FF9F43" strokeDasharray="4 4" strokeWidth={1} />
-                  <Line type="monotone" dataKey="value" stroke="#FF7E67" strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: '#FF7E67' }} />
+                  <ReferenceLine y={13.9} stroke="#FFAB91" strokeDasharray="4 4" strokeWidth={1} />
+                  <ReferenceLine y={3.9} stroke="#FFB74D" strokeDasharray="4 4" strokeWidth={1} />
+                  <Line type="monotone" dataKey="value" stroke="#81C784" strokeWidth={2.5} dot={false} activeDot={{ r: 4, fill: '#81C784' }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           )}
-          {glucoseList.length === 0 && <p className="text-center text-secondary text-[21px] py-12">暂无血糖记录</p>}
+          {glucoseList.length === 0 && <p className="text-center py-12" style={{ fontSize: 'var(--fs-body)', color: 'var(--text-secondary)' }}>暂无血糖记录</p>}
           <div className="flex flex-col gap-2.5">
             {glucoseList.slice(0, 30).map((r) => (
               <div key={r.id} className="bg-white rounded-card px-4 py-3.5 flex justify-between items-center shadow-card">
                 <div>
-                  <span className="text-[19px] text-secondary">{GLUCOSE_TYPE_LABELS[r.type]?.emoji} {GLUCOSE_TYPE_LABELS[r.type]?.label}</span>
-                  <p className="text-[17px] text-tertiary mt-0.5">{new Date(r.timestamp).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <span style={{ fontSize: 'var(--fs-label)', color: 'var(--text-secondary)' }}>{GLUCOSE_TYPE_LABELS[r.type]?.emoji} {GLUCOSE_TYPE_LABELS[r.type]?.label}</span>
+                  <p style={{ fontSize: 'var(--fs-small)', color: 'var(--text-tertiary)', marginTop: 2 }}>{new Date(r.timestamp).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
-                <span className="text-[38px] font-bold" style={{ color: r.value > 13.9 ? 'var(--red)' : r.value < 3.9 ? '#FF9F43' : 'var(--text)' }}>
+                <span style={{ fontSize: 'var(--fs-display)', fontWeight: 700, color: r.value > 13.9 ? 'var(--red)' : r.value < 3.9 ? 'var(--yellow)' : 'var(--mint)' }}>
                   {r.value}
                 </span>
               </div>
@@ -83,20 +87,20 @@ export default function HistoryPage({ onNavigate }: Props) {
 
       {tab === 'meal' && (
         <>
-          {mealList.length === 0 && <p className="text-center text-secondary text-[21px] py-12">暂无饮食记录</p>}
+          {mealList.length === 0 && <p className="text-center py-12" style={{ fontSize: 'var(--fs-body)', color: 'var(--text-secondary)' }}>暂无饮食记录</p>}
           <div className="flex flex-col gap-2.5">
             {mealList.map((m) => (
               <div key={m.id} className="bg-white rounded-card p-3.5 flex gap-3 shadow-card active:opacity-80 transition-opacity" onClick={() => onNavigate('meal-detail', { id: m.id })}>
                 <img src={m.thumbnailData} alt="" className="w-[88px] h-[88px] rounded-[12px] object-cover" />
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">
-                    <span className="text-[20px] font-semibold text-primary">{MEAL_TYPE_LABELS[m.mealType]?.emoji} {MEAL_TYPE_LABELS[m.mealType]?.label}</span>
+                    <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600, color: 'var(--text)' }}>{MEAL_TYPE_LABELS[m.mealType]?.emoji} {MEAL_TYPE_LABELS[m.mealType]?.label}</span>
                     {m.reviewScore !== undefined && (
-                      <span className="text-[28px] font-bold" style={{ color: getScoreStyle(m.reviewScore).color }}>{m.reviewScore}<span className="text-[18px] font-normal text-secondary">分</span></span>
+                      <span style={{ fontSize: 'var(--fs-title)', fontWeight: 700, color: getScoreStyle(m.reviewScore).color }}>{m.reviewScore}<span style={{ fontSize: 'var(--fs-small)', fontWeight: 400, color: 'var(--text-secondary)' }}>分</span></span>
                     )}
                   </div>
-                  <p className="text-[19px] text-secondary truncate mt-0.5">{m.reviewSummary || '等待分析…'}</p>
-                  <p className="text-[17px] text-tertiary mt-0.5">{new Date(m.timestamp).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p className="truncate" style={{ fontSize: 'var(--fs-label)', color: 'var(--text-secondary)', marginTop: 2 }}>{m.reviewSummary || '等待分析…'}</p>
+                  <p style={{ fontSize: 'var(--fs-small)', color: 'var(--text-tertiary)', marginTop: 2 }}>{new Date(m.timestamp).toLocaleString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
               </div>
             ))}

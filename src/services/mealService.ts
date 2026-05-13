@@ -33,3 +33,7 @@ export async function getTodayMeals(): Promise<MealRecord[]> {
 export async function getAllMeals(): Promise<MealRecord[]> {
   return db.mealRecords.orderBy('timestamp').reverse().toArray()
 }
+
+export async function deleteMeal(id: number): Promise<void> {
+  await db.mealRecords.delete(id)
+}

@@ -11,14 +11,7 @@ interface Props {
 }
 
 const scoreColor = (s: number) =>
-  s >= 8 ? 'var(--green)' : s >= 5 ? 'var(--yellow)' : 'var(--red)'
-
-const emojiMap: Record<string, string> = {
-  overeating: '🥺',
-  diet_warning: '💛',
-  high_bg: '🩺',
-  low_bg: '🍬',
-}
+  s >= 7 ? 'var(--green)' : s >= 4 ? 'var(--yellow)' : 'var(--red)'
 
 export default function AlertModal({ visible, type, score, message, suggestion, onClose }: Props) {
   useEffect(() => {
@@ -41,39 +34,42 @@ export default function AlertModal({ visible, type, score, message, suggestion, 
 
   if (!visible) return null
 
+  const iconEl = type === 'overeating' ? '🥺' : type === 'diet_warning' ? '💛' : type === 'high_bg' ? '🩺' : '🍬'
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-8"
-      style={{ background: 'rgba(60,60,58,0.35)', backdropFilter: 'blur(8px)' }}
+      style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
     >
       <div
         className="slide-up bg-white rounded-modal px-8 py-10 text-center w-full max-w-[340px]"
-        style={{ boxShadow: 'var(--shadow-lg)' }}
+        style={{ boxShadow: 'var(--card-shadow)' }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-[64px] mb-4">{emojiMap[type] || '💛'}</div>
+        <div style={{ fontSize: 'var(--fs-emoji-lg)', marginBottom: 16 }}>{iconEl}</div>
 
         {score !== undefined && (
           <div className="pop-in mb-2" style={{ animationDelay: '0.1s' }}>
-            <span className="text-[88px] font-bold leading-none" style={{ color: scoreColor(score) }}>
+            <span className="font-bold leading-none" style={{ fontSize: 'calc(var(--fs-score) * 1.3)', color: scoreColor(score) }}>
               {score}
             </span>
-            <span className="text-2xl text-secondary ml-1">分</span>
+            <span style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)', marginLeft: 4 }}>分</span>
           </div>
         )}
 
-        <p className="text-[28px] font-semibold text-primary leading-snug mb-2">{message}</p>
+        <p style={{ fontSize: 'var(--fs-title)', fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>{message}</p>
 
         {suggestion && (
-          <p className="text-[22px] text-secondary leading-relaxed mb-6">{suggestion}</p>
+          <p style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)', marginBottom: 24 }}>{suggestion}</p>
         )}
 
         <button
           onClick={onClose}
-          className="w-full h-[64px] rounded-btn font-semibold text-[23px] transition-all active:scale-[0.97]" style={{ background: 'var(--coral)', color: 'var(--text)', boxShadow: 'var(--shadow-md)' }}
+          className="w-full h-[64px] rounded-btn font-semibold transition-all active:scale-[0.97]"
+          style={{ fontSize: 'var(--fs-body)', background: 'var(--mint)', color: '#FFFFFF' }}
         >
-          {type === 'overeating' ? '好的，我记住了 🌸' : '我知道了'}
+          {type === 'overeating' ? '好的，我记住了' : '我知道了'}
         </button>
       </div>
     </div>

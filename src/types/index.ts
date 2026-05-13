@@ -52,11 +52,14 @@ export interface AIReviewResult {
 }
 
 // ===== 设置 =====
+export type FontMode = 'normal' | 'large'
+
 export interface AppSettings {
   qwenApiKey: string
   highBgThreshold: number // 默认 13.9
   lowBgThreshold: number // 默认 3.9
   alertScoreThreshold: number // 默认 4（评分 ≤ 此值触发告警）
+  fontMode: FontMode
   updatedAt: number
 }
 

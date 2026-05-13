@@ -4,6 +4,7 @@ export const DEFAULT_SETTINGS = {
   highBgThreshold: 13.9,
   lowBgThreshold: 3.9,
   alertScoreThreshold: 4,
+  fontMode: 'normal' as const,
   updatedAt: Date.now(),
 }
 

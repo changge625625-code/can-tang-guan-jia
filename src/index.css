@@ -3,29 +3,56 @@
 @tailwind utilities;
 
 :root {
-  --coral: #E8927D;
-  --coral-soft: #FDF0EC;
-  --coral-light: #FCE8E3;
-  --cream: #FAFAF8;
-  --bg: #F6F4F1;
+  --mint: #81C784;
+  --mint-soft: #E8F5E9;
+  --mint-light: #F1F8F2;
+  --bg: #F8F6F0;
   --white: #FFFFFF;
-  --text: #4A3F3A;
-  --text-secondary: #7A706A;
-  --text-tertiary: #A89E98;
-  --green: #7EBF73;
-  --green-bg: #F2FAF0;
-  --yellow: #E8C560;
-  --yellow-bg: #FFFCF2;
-  --red: #E57373;
-  --red-bg: #FFF4F4;
-  --border: #EDEBE7;
-  --shadow-sm: 0 1px 3px rgba(60, 60, 58, 0.05);
-  --shadow-md: 0 4px 16px rgba(60, 60, 58, 0.07);
-  --shadow-lg: 0 8px 32px rgba(60, 60, 58, 0.09);
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
-  --radius-xl: 30px;
+  --text: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --green: #81C784;
+  --green-bg: #E8F5E9;
+  --yellow: #FFB74D;
+  --yellow-bg: #FFF3E0;
+  --red: #FFAB91;
+  --red-bg: #FFF0EB;
+  --border: #E8E5DF;
+  --card-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  --card-radius: 16px;
+  --btn-radius: 20px;
+
+  /* 字体大小系统 — normal 模式（默认） */
+  --fs-display: 36px;
+  --fs-title:   28px;
+  --fs-heading: 22px;
+  --fs-body:    17px;
+  --fs-body-lg: 20px;
+  --fs-label:   15px;
+  --fs-small:   13px;
+  --fs-score:   56px;
+  --fs-number:  32px;
+  --fs-btn:     18px;
+  --fs-emoji-lg: 48px;
+  --fs-emoji-md: 32px;
+  --fs-emoji-sm: 24px;
+}
+
+/* 老人大字模式 */
+html[data-font-mode="large"] {
+  --fs-display: 52px;
+  --fs-title:   40px;
+  --fs-heading: 30px;
+  --fs-body:    24px;
+  --fs-body-lg: 28px;
+  --fs-label:   20px;
+  --fs-small:   16px;
+  --fs-score:   80px;
+  --fs-number:  44px;
+  --fs-btn:     24px;
+  --fs-emoji-lg: 64px;
+  --fs-emoji-md: 44px;
+  --fs-emoji-sm: 34px;
 }
 
 * {
@@ -44,8 +71,12 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
-  font-size: 17px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+html[data-font-mode="large"] body {
+  font-size: 20px;
 }
 
 body {
@@ -54,16 +85,14 @@ body {
 }
 
 ::selection {
-  background: rgba(255, 126, 103, 0.2);
+  background: rgba(129, 199, 132, 0.2);
 }
 
-/* Button reset */
 button {
   font-family: inherit;
   outline: none;
 }
 
-/* Input reset */
 input {
   font-family: inherit;
   outline: none;
@@ -81,8 +110,8 @@ input {
 
 /* Breathe animation for camera button */
 @keyframes breathe {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 126, 103, 0.35); }
-  50% { box-shadow: 0 0 0 16px rgba(255, 126, 103, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(129, 199, 132, 0.3); }
+  50% { box-shadow: 0 0 0 16px rgba(129, 199, 132, 0); }
 }
 .breathe-ring {
   animation: breathe 2.5s ease-in-out infinite;

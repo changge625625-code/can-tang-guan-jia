@@ -4,6 +4,7 @@ import { addGlucose } from '../services/glucoseService'
 import { addAlertLog } from '../services/alertService'
 import { getSettings } from '../services/settingsService'
 import AlertModal from '../components/AlertModal'
+import Icon from '../components/Icon'
 import type { GlucoseType } from '../types'
 
 const TYPES: GlucoseType[] = ['fasting', 'before_meal', 'after_meal', 'before_sleep', 'random']
@@ -46,32 +47,33 @@ export default function RecordPage({ onNavigate }: Props) {
   }
 
   const keys = [['1','2','3'],['4','5','6'],['7','8','9'],['.','0','⌫']]
-  const keyBg = (k: string) => k === '⌫' ? 'bg-coral-soft text-coral' : 'bg-cream text-primary'
 
   return (
     <div className="page-fade-in px-5 pb-32 pt-6">
-      {/* Value display */}
       <div className="text-center mb-6">
-        <p className="text-[20px] text-secondary mb-2">血糖值</p>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <Icon name="blood" size={22} color="var(--text-secondary)" />
+          <span style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-secondary)' }}>血糖值</span>
+        </div>
         <div className="flex items-baseline justify-center gap-1">
-          <span className="text-[56px] font-bold text-primary leading-none min-h-[72px]" style={{ color: value ? 'var(--text)' : 'var(--text-tertiary)' }}>
+          <span className="font-bold leading-none" style={{ fontSize: 'var(--fs-score)', minHeight: '72px', color: value ? 'var(--mint)' : 'var(--text-tertiary)' }}>
             {value || '0.0'}
           </span>
-          <span className="text-[22px] text-secondary">mmol/L</span>
+          <span style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)' }}>mmol/L</span>
         </div>
       </div>
 
-      {/* Type picker */}
       <div className="flex flex-wrap gap-2 justify-center mb-5">
         {TYPES.map((t) => (
           <button
             key={t}
             onClick={() => setType(t)}
-            className="h-11 px-4 rounded-full text-[20px] font-medium transition-all active:scale-95"
+            className="h-11 px-4 rounded-full font-medium transition-all active:scale-95"
             style={{
-              background: type === t ? 'var(--coral-soft)' : 'var(--white)',
-              color: type === t ? 'var(--coral)' : 'var(--text-secondary)',
-              border: type === t ? '1.5px solid var(--coral)' : '1px solid var(--border)',
+              fontSize: 'var(--fs-label)',
+              background: type === t ? 'var(--mint-soft)' : 'var(--white)',
+              color: type === t ? 'var(--mint)' : 'var(--text-secondary)',
+              border: type === t ? '1.5px solid var(--mint)' : '1px solid var(--border)',
             }}
           >
             {GLUCOSE_TYPE_LABELS[t].emoji} {GLUCOSE_TYPE_LABELS[t].label}
@@ -79,7 +81,6 @@ export default function RecordPage({ onNavigate }: Props) {
         ))}
       </div>
 
-      {/* Number pad */}
       <div className="bg-white rounded-card p-3 shadow-card">
         {keys.map((row, i) => (
           <div key={i} className="flex gap-2 mb-2 last:mb-0">
@@ -87,7 +88,12 @@ export default function RecordPage({ onNavigate }: Props) {
               <button
                 key={k}
                 onClick={() => k === '⌫' ? del() : input(k)}
-                className={`flex-1 h-[64px] rounded-[14px] text-[30px] font-medium active:opacity-70 transition-opacity ${keyBg(k)}`}
+                className="flex-1 h-[64px] rounded-[14px] font-medium active:opacity-70 transition-opacity"
+                style={{
+                  fontSize: 'var(--fs-title)',
+                  background: k === '⌫' ? 'var(--mint-soft)' : '#FAFAFA',
+                  color: k === '⌫' ? 'var(--mint)' : 'var(--text)',
+                }}
               >
                 {k}
               </button>
@@ -96,14 +102,14 @@ export default function RecordPage({ onNavigate }: Props) {
         ))}
       </div>
 
-      {/* Save */}
       <button
         onClick={save}
         disabled={!value || saving}
-        className="w-full h-[68px] mt-5 rounded-btn font-semibold text-[24px] active:scale-[0.97] transition-all disabled:opacity-40"
-        style={{ background: 'var(--coral)', color: 'var(--text)', boxShadow: 'var(--shadow-md)' }}
+        className="w-full h-[68px] mt-5 rounded-btn font-semibold active:scale-[0.97] transition-all disabled:opacity-40"
+        style={{ fontSize: 'var(--fs-heading)', background: 'var(--mint)', color: '#FFFFFF' }}
       >
-        {saving ? '保存中...' : '💾 保存'}
+        <Icon name="save" size={20} color="#FFFFFF" />
+        <span className="ml-2">{saving ? '保存中...' : '保存'}</span>
       </button>
 
       <AlertModal visible={alert.visible} type={alert.type} message={alert.message} onClose={() => { setAlert({ ...alert, visible: false }); onNavigate('home') }} />

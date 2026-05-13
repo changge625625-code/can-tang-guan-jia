@@ -4,29 +4,21 @@ interface Props {
 }
 
 const scoreColor = (s: number) =>
-  s >= 8 ? 'var(--green)' : s >= 5 ? 'var(--yellow)' : 'var(--red)'
-
-const emoji = (s: number) =>
-  s >= 8 ? '😊' : s >= 5 ? '🙂' : '🥺'
-
-const sizes = {
-  sm: { number: 52, unit: 22 },
-  md: { number: 72, unit: 26 },
-  lg: { number: 104, unit: 32 },
-}
+  s >= 7 ? 'var(--green)' : s >= 4 ? 'var(--yellow)' : 'var(--red)'
 
 export default function ScoreDisplay({ score, size = 'lg' }: Props) {
-  const s = sizes[size]
+  const numSize = size === 'lg' ? 'var(--fs-score)' : size === 'md' ? 'calc(var(--fs-score) * 0.7)' : 'var(--fs-number)'
+  const unitSize = size === 'lg' ? 'var(--fs-emoji-md)' : size === 'md' ? 'var(--fs-emoji-sm)' : 'var(--fs-heading)'
+
   return (
     <div className="flex items-center justify-center gap-2 pop-in">
-      <span style={{ fontSize: s.number * 0.5 }}>{emoji(score)}</span>
       <span
         className="font-bold leading-none"
-        style={{ fontSize: s.number, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}
+        style={{ fontSize: numSize, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}
       >
         {score}
       </span>
-      <span className="mt-2" style={{ fontSize: s.unit, color: 'var(--text-secondary)' }}>
+      <span className="mt-2" style={{ fontSize: unitSize, color: 'var(--text-secondary)' }}>
         分
       </span>
     </div>
