@@ -74,35 +74,46 @@ export default function MealPage({ onNavigate }: Props) {
 
   const reset = () => { setPhotoBase64(''); setResult(null); setStep('capture'); setSavedMealId(null) }
 
+  const cardClass = "bg-white shadow-card"
+  const cardStyle = { borderRadius: 'var(--card-radius)' }
+
   return (
     <div className="page-fade-in px-5 pb-32 pt-6">
-      <h1 className="text-center mb-6" style={{ fontSize: 'var(--fs-display)', fontWeight: 700, color: 'var(--text)' }}>拍饮食</h1>
+      <h1 className="h1 text-center mb-6">拍饮食</h1>
 
-      {error && <div className="rounded-card px-4 py-3 mb-4" style={{ fontSize: 'var(--fs-body-lg)', background: 'var(--red-bg)', color: 'var(--red)' }}>{error}</div>}
+      {error && (
+        <div className="p-4 mb-4 text-center" style={{ fontSize: 'var(--fs-body)', background: 'var(--red-bg)', color: 'var(--red)', borderRadius: 'var(--card-radius)' }}>
+          {error}
+        </div>
+      )}
 
       {step === 'capture' && (
-        <div className="text-center">
-          <p style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)', marginBottom: 32 }}>拍下您这顿饭的照片，AI 帮您看看</p>
+        <div className="text-center pt-6">
+          <p style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)', marginBottom: 40, lineHeight: 1.6 }}>
+            拍下这顿饭的照片<br/>AI 帮您分析升糖风险
+          </p>
           <button
             onClick={() => fileRef.current?.click()}
-            className="breathe-ring w-[200px] h-[180px] rounded-full flex flex-col items-center justify-center mx-auto transition-transform active:scale-95"
-            style={{ background: 'var(--mint)', fontSize: 'var(--fs-score)' }}
+            className="breathe-ring w-[180px] h-[180px] rounded-full flex items-center justify-center mx-auto transition-transform active:scale-95"
+            style={{ background: 'var(--mint)' }}
           >
-            <Icon name="camera" size={48} color="#FFFFFF" />
+            <Icon name="camera" size={52} color="#FFFFFF" />
           </button>
           <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFile} />
-          <p style={{ fontSize: 'var(--fs-label)', color: 'var(--text-tertiary)', marginTop: 16 }}>点击大按钮拍照</p>
+          <p style={{ fontSize: 'var(--fs-label)', color: 'var(--text-tertiary)', marginTop: 20 }}>
+            轻触上方按钮拍照
+          </p>
         </div>
       )}
 
       {step === 'preview' && (
         <>
-          <div className="bg-white rounded-card overflow-hidden shadow-card mb-4">
+          <div className="overflow-hidden mb-4" style={{ borderRadius: 'var(--card-radius)', boxShadow: 'var(--card-shadow)' }}>
             <img src={photoBase64} alt="" className="w-full block" />
           </div>
           <div className="flex gap-2 justify-center mb-5 flex-wrap">
             {MEAL_TYPES.map((t) => (
-              <button key={t} onClick={() => setMealType(t)} className="h-11 px-4 rounded-full font-medium transition-all active:scale-95"
+              <button key={t} onClick={() => setMealType(t)} className="h-11 px-5 rounded-full font-medium transition-all active:scale-95"
                 style={{
                   fontSize: 'var(--fs-label)',
                   background: mealType === t ? 'var(--mint-soft)' : 'var(--white)',
@@ -114,50 +125,54 @@ export default function MealPage({ onNavigate }: Props) {
             ))}
           </div>
           <div className="flex gap-3">
-            <button onClick={reset} className="flex-1 h-[64px] rounded-btn bg-white border border-[#E8E5DF] font-medium active:bg-gray-50 transition-colors" style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)' }}>
+            <button onClick={reset} className="flex-1 h-[60px] font-medium btn-press flex items-center justify-center gap-2"
+              style={{ fontSize: 'var(--fs-heading)', background: 'var(--white)', color: 'var(--text-secondary)', borderRadius: 'var(--btn-radius)', border: '1px solid var(--border)' }}>
               <Icon name="refresh" size={20} color="var(--text-secondary)" />
-              <span className="ml-2">重拍</span>
+              重拍
             </button>
-            <button onClick={analyze} className="flex-[2] h-[64px] rounded-btn font-semibold active:scale-[0.97] transition-all" style={{ fontSize: 'var(--fs-body)', background: 'var(--mint)', color: '#FFFFFF' }}>
+            <button onClick={analyze} className="flex-[2] h-[60px] font-semibold btn-press flex items-center justify-center gap-2"
+              style={{ fontSize: 'var(--fs-body)', background: 'var(--mint)', color: '#FFFFFF', borderRadius: 'var(--btn-radius)' }}>
               <Icon name="search" size={20} color="#FFFFFF" />
-              <span className="ml-2">分析这顿饭</span>
+              分析这顿饭
             </button>
           </div>
         </>
       )}
 
       {step === 'analyzing' && (
-        <div className="text-center py-16">
-          <div className="spin-slow mb-6 inline-block" style={{ fontSize: 'var(--fs-score)' }}>🍽️</div>
+        <div className="text-center py-20">
+          <div className="spin-slow mb-8 inline-flex items-center justify-center w-20 h-20 rounded-full" style={{ background: 'var(--mint-soft)' }}>
+            <Icon name="microbe" size={36} color="var(--mint)" />
+          </div>
           <p style={{ fontSize: 'var(--fs-title)', fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>正在帮您看看这顿饭...</p>
-          <p style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-secondary)' }}>AI 正在分析食材和份量</p>
+          <p style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-tertiary)' }}>AI 正在分析食材和份量</p>
         </div>
       )}
 
       {step === 'result' && result && (
         <div className="flex flex-col gap-4 stagger">
-          <div className="bg-white rounded-card p-6 text-center shadow-card">
+          <div className={`p-6 text-center ${cardClass}`} style={cardStyle}>
             <ScoreDisplay score={result.score} size="lg" />
-            <p style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)', marginTop: 8 }}>{result.summary}</p>
+            <p style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)', marginTop: 10 }}>{result.summary}</p>
           </div>
 
           {result.foodItems.length > 0 && (
-            <div className="bg-white rounded-card p-5 shadow-card">
-              <div className="flex items-center gap-1.5 mb-3">
+            <div className={`p-5 ${cardClass}`} style={cardStyle}>
+              <div className="flex items-center gap-2 mb-4">
                 <Icon name="microbe" size={20} color="var(--text)" />
-                <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600, color: 'var(--text)' }}>食物升糖分析</span>
+                <span style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)' }}>食物升糖分析</span>
               </div>
               <div className="flex flex-col gap-2">
                 {result.foodItems.map((f, i) => (
-                  <div key={i} className="flex items-center justify-between py-2 px-3 rounded-[12px]" style={{ background: f.gi === '高' ? 'var(--red-bg)' : f.gi === '中' ? 'var(--yellow-bg)' : 'var(--green-bg)' }}>
-                    <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 500, color: 'var(--text)' }}>{f.name}</span>
+                  <div key={i} className="flex items-center justify-between py-2.5 px-3.5 rounded-[10px]" style={{ background: f.gi === '高' ? 'var(--red-bg)' : f.gi === '中' ? 'var(--yellow-bg)' : 'var(--green-bg)' }}>
+                    <span style={{ fontSize: 'var(--fs-body)', fontWeight: 500, color: 'var(--text)' }}>{f.name}</span>
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-full font-semibold" style={{
+                      <span className="px-2.5 py-1 rounded-full font-medium" style={{
                         fontSize: 'var(--fs-small)',
-                        background: f.gi === '高' ? 'var(--red-bg)' : f.gi === '中' ? 'var(--yellow-bg)' : 'var(--green-bg)',
                         color: f.gi === '高' ? 'var(--red)' : f.gi === '中' ? 'var(--yellow)' : 'var(--mint)',
-                        border: `1.5px solid ${f.gi === '高' ? 'var(--red)' : f.gi === '中' ? 'var(--yellow)' : 'var(--mint)'}`
-                      }}>{f.gi === '高' ? '高' : f.gi === '中' ? '中' : '低'}</span>
+                        border: `1.5px solid ${f.gi === '高' ? 'var(--red)' : f.gi === '中' ? 'var(--yellow)' : 'var(--mint)'}`,
+                        background: 'transparent',
+                      }}>{f.gi === '高' ? '高升糖' : f.gi === '中' ? '中升糖' : '低升糖'}</span>
                       <span style={{ fontSize: 'var(--fs-small)', color: 'var(--text-secondary)' }}>{f.risk}</span>
                     </div>
                   </div>
@@ -166,44 +181,55 @@ export default function MealPage({ onNavigate }: Props) {
             </div>
           )}
 
-          <div className="bg-white rounded-card p-5 shadow-card flex flex-col gap-3.5">
-            <div className="flex items-start gap-2">
-              <Icon name="salad" size={20} color="var(--text)" />
-              <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600 }}>主食</span>
-              <span style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-secondary)' }}>{result.stapleWarning}</span>
+          <div className={`p-5 flex flex-col gap-4 ${cardClass}`} style={cardStyle}>
+            <div className="flex items-start gap-2.5">
+              <Icon name="salad" size={20} color="var(--text)" className="mt-0.5" />
+              <div>
+                <span style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)' }}>主食</span>
+                <p style={{ fontSize: 'var(--fs-body)', color: 'var(--text-secondary)', marginTop: 2 }}>{result.stapleWarning}</p>
+              </div>
             </div>
             {result.dangerFoods && result.dangerFoods !== '无' && (
-              <div className="flex items-start gap-2">
-                <Icon name="alert" size={20} color="var(--red)" />
-                <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600 }}>警惕</span>
-                <span style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--red)' }}>{result.dangerFoods}</span>
+              <div className="flex items-start gap-2.5">
+                <Icon name="alert" size={20} color="var(--red)" className="mt-0.5" />
+                <div>
+                  <span style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)' }}>警惕</span>
+                  <p style={{ fontSize: 'var(--fs-body)', color: 'var(--red)', marginTop: 2 }}>{result.dangerFoods}</p>
+                </div>
               </div>
             )}
-            <div className="flex items-start gap-2">
-              <Icon name="tip" size={20} color="var(--text)" />
-              <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600 }}>建议</span>
+            <div className="flex items-start gap-2.5">
+              <Icon name="tip" size={20} color="var(--text)" className="mt-0.5" />
+              <div className="flex-1">
+                <span style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--text)' }}>建议</span>
+                <ul className="mt-1.5 space-y-1.5">
+                  {result.suggestions.map((s, i) => (
+                    <li key={i} style={{ fontSize: 'var(--fs-body)', color: 'var(--text-secondary)', lineHeight: 1.55 }}>{s}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <ul className="ml-9 space-y-1">
-              {result.suggestions.map((s, i) => <li key={i} style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-secondary)' }}>{s}</li>)}
-            </ul>
             {result.nextMeal && (
-              <div className="rounded-card p-4" style={{ background: 'var(--green-bg)', border: '1px solid var(--mint)' }}>
-                <div className="flex items-center gap-1.5">
+              <div className="p-4" style={{ background: 'var(--green-bg)', borderRadius: 'var(--card-radius)', border: '1px solid rgba(124,184,130,0.2)' }}>
+                <div className="flex items-center gap-2 mb-1.5">
                   <Icon name="salad" size={20} color="var(--mint)" />
-                  <span style={{ fontSize: 'var(--fs-body-lg)', fontWeight: 600, color: 'var(--mint)' }}>下一顿这样吃</span>
+                  <span style={{ fontSize: 'var(--fs-body)', fontWeight: 600, color: 'var(--mint)' }}>下一顿这样吃</span>
                 </div>
-                <p style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--mint)', marginTop: 6 }}>{result.nextMeal}</p>
+                <p style={{ fontSize: 'var(--fs-body)', color: 'var(--mint)', lineHeight: 1.6 }}>{result.nextMeal}</p>
               </div>
             )}
           </div>
+
           <div className="flex gap-3">
-            <button onClick={reset} className="flex-1 h-[64px] rounded-btn bg-white border border-[#E8E5DF] font-medium active:bg-gray-50 transition-colors" style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)' }}>
+            <button onClick={reset} className="flex-1 h-[60px] font-medium btn-press flex items-center justify-center gap-2"
+              style={{ fontSize: 'var(--fs-heading)', background: 'var(--white)', color: 'var(--text-secondary)', borderRadius: 'var(--btn-radius)', border: '1px solid var(--border)' }}>
               <Icon name="refresh" size={20} color="var(--text-secondary)" />
-              <span className="ml-2">再拍</span>
+              再拍
             </button>
-            <button onClick={() => onNavigate('home')} className="flex-[2] h-[64px] rounded-btn font-semibold active:scale-[0.97] transition-all" style={{ fontSize: 'var(--fs-body)', background: 'var(--mint)', color: '#FFFFFF' }}>
+            <button onClick={() => onNavigate('home')} className="flex-[2] h-[60px] font-semibold btn-press flex items-center justify-center gap-2"
+              style={{ fontSize: 'var(--fs-body)', background: 'var(--mint)', color: '#FFFFFF', borderRadius: 'var(--btn-radius)' }}>
               <Icon name="home" size={20} color="#FFFFFF" />
-              <span className="ml-2">首页</span>
+              首页
             </button>
           </div>
         </div>

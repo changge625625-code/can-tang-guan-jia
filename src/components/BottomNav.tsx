@@ -17,19 +17,20 @@ export default function BottomNav({ active, onNavigate }: Props) {
     <nav
       className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-20"
       style={{
-        background: 'rgba(255,255,255,0.88)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
+        background: 'rgba(255,255,255,0.92)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--border)',
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
-      <div className="flex justify-around items-center h-[72px] px-2">
+      <div className="flex justify-around items-center h-[68px] px-3">
         {tabs.map((tab) => {
           const isActive = active === tab.key
           const isPrimary = tab.key === 'meal'
           const activeColor = 'var(--mint)'
           const activeBg = 'var(--mint-soft)'
+          const iconSize = isPrimary ? 26 : 21
           return (
             <button
               key={tab.key}
@@ -39,23 +40,24 @@ export default function BottomNav({ active, onNavigate }: Props) {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '2px',
-                minWidth: isPrimary ? '110px' : '64px',
-                padding: isPrimary ? '6px 24px' : '6px 12px',
-                borderRadius: isPrimary ? '20px' : '12px',
+                gap: '3px',
+                minWidth: isPrimary ? '100px' : '60px',
+                padding: isPrimary ? '8px 20px' : '6px 10px',
+                borderRadius: isPrimary ? '18px' : '10px',
                 background: isActive ? activeBg : 'transparent',
-                border: isActive ? '1.5px solid var(--mint)' : '1px solid transparent',
+                border: 'none',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease',
+                transition: 'all 0.2s ease',
               }}
             >
-              <Icon name={tab.icon} size={isPrimary ? 28 : 22} color={isActive ? activeColor : 'var(--text-secondary)'} />
+              <Icon name={tab.icon} size={iconSize} color={isActive ? activeColor : 'var(--text-tertiary)'} />
               <span
                 style={{
-                  fontSize: isPrimary ? 'var(--fs-small)' : '11px',
+                  fontSize: '11px',
                   fontWeight: isActive ? 600 : 400,
-                  color: isActive ? activeColor : 'var(--text-secondary)',
+                  color: isActive ? activeColor : 'var(--text-tertiary)',
                   lineHeight: 1.2,
+                  letterSpacing: '0.02em',
                 }}
               >
                 {tab.label}

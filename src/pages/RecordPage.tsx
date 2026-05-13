@@ -24,7 +24,6 @@ export default function RecordPage({ onNavigate }: Props) {
     if (v.includes('.') && v.split('.')[1]?.length > 1) return
     setValue(v)
   }
-
   const del = () => setValue((v) => v.slice(0, -1))
 
   const save = async () => {
@@ -51,24 +50,30 @@ export default function RecordPage({ onNavigate }: Props) {
   return (
     <div className="page-fade-in px-5 pb-32 pt-6">
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Icon name="blood" size={22} color="var(--text-secondary)" />
-          <span style={{ fontSize: 'var(--fs-body-lg)', color: 'var(--text-secondary)' }}>血糖值</span>
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <Icon name="blood" size={20} color="var(--mint)" />
+          <span style={{ fontSize: 'var(--fs-label)', color: 'var(--text-secondary)', fontWeight: 500, letterSpacing: '0.04em' }}>血糖值</span>
         </div>
         <div className="flex items-baseline justify-center gap-1">
-          <span className="font-bold leading-none" style={{ fontSize: 'var(--fs-score)', minHeight: '72px', color: value ? 'var(--mint)' : 'var(--text-tertiary)' }}>
+          <span className="font-bold leading-none value-in" style={{
+            fontSize: 'var(--fs-score)',
+            minHeight: '72px',
+            color: value ? 'var(--mint)' : 'var(--text-tertiary)',
+            fontWeight: value ? 700 : 400,
+          }}>
             {value || '0.0'}
           </span>
-          <span style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-secondary)' }}>mmol/L</span>
+          <span style={{ fontSize: 'var(--fs-heading)', color: 'var(--text-tertiary)' }}>mmol/L</span>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 justify-center mb-5">
+      {/* Type picker — pill buttons */}
+      <div className="flex flex-wrap gap-2 justify-center mb-6">
         {TYPES.map((t) => (
           <button
             key={t}
             onClick={() => setType(t)}
-            className="h-11 px-4 rounded-full font-medium transition-all active:scale-95"
+            className="h-11 px-5 rounded-full font-medium transition-all active:scale-95"
             style={{
               fontSize: 'var(--fs-label)',
               background: type === t ? 'var(--mint-soft)' : 'var(--white)',
@@ -81,38 +86,46 @@ export default function RecordPage({ onNavigate }: Props) {
         ))}
       </div>
 
-      <div className="bg-white rounded-card p-3 shadow-card">
+      {/* Number pad — journal paper feel */}
+      <div className="p-4 mb-5" style={{ background: 'var(--paper)', borderRadius: 'var(--card-radius)', boxShadow: 'var(--card-shadow)' }}>
         {keys.map((row, i) => (
-          <div key={i} className="flex gap-2 mb-2 last:mb-0">
+          <div key={i} className="flex gap-2.5 mb-2.5 last:mb-0">
             {row.map((k) => (
               <button
                 key={k}
                 onClick={() => k === '⌫' ? del() : input(k)}
-                className="flex-1 h-[64px] rounded-[14px] font-medium active:opacity-70 transition-opacity"
+                className="flex-1 h-[62px] rounded-[14px] font-medium active:opacity-70 transition-all"
                 style={{
                   fontSize: 'var(--fs-title)',
-                  background: k === '⌫' ? 'var(--mint-soft)' : '#FAFAFA',
+                  background: k === '⌫' ? 'var(--mint-soft)' : '#F5F3EE',
                   color: k === '⌫' ? 'var(--mint)' : 'var(--text)',
+                  fontWeight: k === '⌫' ? 500 : 400,
                 }}
               >
-                {k}
+                {k === '⌫' ? <Icon name="arrowLeft" size={22} color="var(--mint)" /> : k}
               </button>
             ))}
           </div>
         ))}
       </div>
 
+      {/* Save button */}
       <button
         onClick={save}
         disabled={!value || saving}
-        className="w-full h-[68px] mt-5 rounded-btn font-semibold active:scale-[0.97] transition-all disabled:opacity-40"
-        style={{ fontSize: 'var(--fs-heading)', background: 'var(--mint)', color: '#FFFFFF' }}
+        className="w-full h-[66px] font-semibold btn-press disabled:opacity-40 flex items-center justify-center gap-2"
+        style={{ fontSize: 'var(--fs-heading)', background: 'var(--mint)', color: '#FFFFFF', borderRadius: 'var(--btn-radius)' }}
       >
-        <Icon name="save" size={20} color="#FFFFFF" />
-        <span className="ml-2">{saving ? '保存中...' : '保存'}</span>
+        <Icon name="save" size={22} color="#FFFFFF" />
+        {saving ? '保存中...' : '保存'}
       </button>
 
-      <AlertModal visible={alert.visible} type={alert.type} message={alert.message} onClose={() => { setAlert({ ...alert, visible: false }); onNavigate('home') }} />
+      <AlertModal
+        visible={alert.visible}
+        type={alert.type}
+        message={alert.message}
+        onClose={() => { setAlert({ ...alert, visible: false }); onNavigate('home') }}
+      />
     </div>
   )
 }
